@@ -1,61 +1,26 @@
-from dataclasses import dataclass
-
 import pytest
-import aiohttp
-from multidict import CIMultiDictProxy
+from aioredis import Redis
 from elasticsearch import AsyncElasticsearch
 
-SERVICE_URL = "http://127.0.0.1:8000"
-
-
-@dataclass
-class HTTPResponse:
-    body: dict
-    headers: CIMultiDictProxy[str]
-    status: int
-
-
-@pytest.fixture(scope="session")
-async def es_client():
-    client = AsyncElasticsearch(hosts="127.0.0.1:9200")
-    yield client
-    await client.close()
-
-
-@pytest.fixture(scope="session")
-async def session():
-    session = aiohttp.ClientSession()
-    yield session
-    await session.close()
-
-
-@pytest.fixture
-def make_get_request(session):
-    async def inner(method: str, params: dict = None) -> HTTPResponse:
-        params = params or {}
-        url = (
-            SERVICE_URL + "/api/v1" + method
-        )  # в боевых системах старайтесь так не делать!
-        async with session.get(url, params=params) as response:
-            return HTTPResponse(
-                body=await response.json(),
-                headers=response.headers,
-                status=response.status,
-            )
-
-    return inner
+INDEX = "movies"
+FILM_ID = "3d825f60-9fff-4dfe-b294-1a45fa1e115d"
 
 
 @pytest.mark.asyncio
-async def test_search_detailed(es_client):
-    # Заполнение данных для теста
-    await es_client.bulk(...)
+async def test_elastic(elastic_client: AsyncElasticsearch):
+    """Получить фильм по id и проверить его title."""
+    film = await elastic_client.get(index=INDEX, id=FILM_ID)
+    assert film
+    assert film["_source"]["title"] == "Star Wars: Episode IV - A New Hope"
 
-    # Выполнение запроса
-    response = await make_get_request("/search", {"search": "Star Wars"})
 
-    # Проверка результата
-    assert response.status == 200
-    assert len(response.body) == 1
+@pytest.mark.asyncio
+async def test_redis(redis_client: Redis):
+    """Проверить что в Redis нет ключей + базовые операции с ним."""
+    keys = await redis_client.keys()
+    assert len(keys) == 0
 
-    assert response.body == expected
+    await redis_client.set(FILM_ID, "Star Wars: Episode IV - A New Hope")
+    assert (
+        await redis_client.get(FILM_ID)
+    ).decode() == "Star Wars: Episode IV - A New Hope"
