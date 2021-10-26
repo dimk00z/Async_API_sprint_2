@@ -9,6 +9,13 @@ from utils.setup import redis_setup, elastic_setup
 from utils.connections import redis_connect, elastic_connect
 
 
+@dataclass
+class HTTPResponse:
+    body: dict
+    headers: CIMultiDictProxy[str]
+    status: int
+
+
 @pytest.fixture(scope="session")
 def settings():
     return Settings()
@@ -33,14 +40,6 @@ async def redis_client(settings):
     await redis_setup(redis_client=client)
 
     yield client
-    await client.close()
-
-
-@dataclass
-class HTTPResponse:
-    body: dict
-    headers: CIMultiDictProxy[str]
-    status: int
 
 
 @pytest.fixture(scope="session")
