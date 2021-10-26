@@ -1,17 +1,10 @@
-import os
-import sys
 import asyncio
-import inspect
 import logging
 
 import backoff
 import aioredis
 import settings
 from elasticsearch import AsyncElasticsearch
-
-current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parent_dir = os.path.dirname(current_dir)
-sys.path.insert(0, parent_dir)
 
 
 def backoff_handler(details):
