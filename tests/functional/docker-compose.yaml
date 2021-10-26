@@ -1,10 +1,17 @@
 version: '3'
-services:
-  fastapi:
-    build: ../../.
-    image: fastapi-image
-    ...
 
-  tests:
-    image: fastapi-image
-    ... 
+services:
+  movies-elastic:
+    container_name: movies-elastic
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.14.1
+    environment:
+      - "discovery.type=single-node"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+
+  movies-redis:
+    container_name: movies-redis
+    image: redis:6.2.6-alpine
+    ports:
+      - "6379:6379"
