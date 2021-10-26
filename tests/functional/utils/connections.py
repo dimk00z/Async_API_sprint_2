@@ -3,8 +3,10 @@ import logging
 
 import backoff
 import aioredis
-import settings
 from elasticsearch import AsyncElasticsearch
+from settings import CONNECTIONS_MAX_TIME, Settings
+
+settings = Settings()
 
 
 def backoff_handler(details):
@@ -19,7 +21,7 @@ def backoff_handler(details):
     backoff.expo,
     (ConnectionError,),
     on_backoff=backoff_handler,
-    max_time=settings.CONNECTIONS_MAX_TIME,
+    max_time=CONNECTIONS_MAX_TIME,
 )
 async def redis_connect(*, host: str, port: int) -> aioredis.Redis:
     redis = aioredis.from_url(f"redis://{host}:{port}")
@@ -33,7 +35,7 @@ async def redis_connect(*, host: str, port: int) -> aioredis.Redis:
     backoff.expo,
     (ConnectionError,),
     on_backoff=backoff_handler,
-    max_time=settings.CONNECTIONS_MAX_TIME,
+    max_time=CONNECTIONS_MAX_TIME,
 )
 async def elastic_connect(*, host: str) -> AsyncElasticsearch:
     elastic = AsyncElasticsearch(hosts=host, verify_certs=True)
@@ -44,7 +46,8 @@ async def elastic_connect(*, host: str) -> AsyncElasticsearch:
 
 async def main():
     "Waiters for Elasticsearch and REDIS"
-    await elastic_connect(host=settings.es_host)
+    es = await elastic_connect(host=settings.es_host)
+    await es.close()
     await redis_connect(host=settings.redis_host, port=settings.redis_port)
 
 
