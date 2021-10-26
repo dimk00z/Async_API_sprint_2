@@ -1,51 +1,31 @@
-from dataclasses import dataclass
-
 import pytest
-import aiohttp
-from multidict import CIMultiDictProxy
-from elasticsearch import AsyncElasticsearch
-
-from .settings import TestSettings
-
-SERVICE_URL = "http://127.0.0.1:8000"
+from settings import Settings
+from utils.setup import redis_setup, elastic_setup
+from utils.connections import redis_connect, elastic_connect
 
 
 @pytest.fixture(scope="session")
-def settings() -> TestSettings:
-    return TestSettings()
-
-
-@dataclass
-class HTTPResponse:
-    body: dict
-    headers: CIMultiDictProxy[str]
-    status: int
+def settings():
+    return Settings()
 
 
 @pytest.fixture(scope="session")
-async def es_client():
-    client = AsyncElasticsearch(hosts="127.0.0.1:9200")
+async def elastic_client(settings):
+    """Установка соединения + настройка Elastic клиента."""
+    client = await elastic_connect(host=settings.es_host)
+
+    await elastic_setup(es_client=client)
+
     yield client
     await client.close()
 
 
 @pytest.fixture(scope="session")
-async def session():
-    session = aiohttp.ClientSession()
-    yield session
-    await session.close()
+async def redis_client(settings):
+    """Установка соединения + настройка Redis клиента."""
+    client = await redis_connect(host=settings.redis_host, port=settings.redis_port)
 
+    await redis_setup(redis_client=client)
 
-@pytest.fixture
-def make_get_request(session):
-    async def inner(method: str, params: dict = None) -> HTTPResponse:
-        params = params or {}
-        url = SERVICE_URL + "/api/v1" + method  # в боевых системах старайтесь так не делать!
-        async with session.get(url, params=params) as response:
-            return HTTPResponse(
-                body=await response.json(),
-                headers=response.headers,
-                status=response.status,
-            )
-
-    return inner
+    yield client
+    await client.close()
