@@ -40,6 +40,8 @@ async def redis_client(settings):
     await redis_setup(redis_client=client)
 
     yield client
+    client.close()
+    await client.wait_closed()
 
 
 @pytest.fixture(scope="session")
@@ -58,10 +60,10 @@ def event_loop(request):
 
 
 @pytest.fixture
-def get_request(session):
+def get_request(session, settings):
     async def inner(method: str, params: dict = None) -> HTTPResponse:
         params = params or {}
-        async_api_host = Settings().async_api_host
+        async_api_host = settings.async_api_host
         # export ASYNC_API_HOST="http://178.154.213.182:8000/api/v1" - для проверки на живом
         # python -m pytest -vv
         url = f"{async_api_host}{method}"

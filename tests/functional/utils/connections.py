@@ -43,7 +43,7 @@ async def elastic_connect(*, host: str) -> AsyncElasticsearch:
 
 
 async def main():
-    """Waiters for Elasticsearch and REDIS"""
+    """Waiters for Elasticsearch, REDIS"""
     settings = Settings()
     es = await elastic_connect(host=settings.es_host)
     await es.close()

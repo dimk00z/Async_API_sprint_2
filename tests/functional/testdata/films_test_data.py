@@ -1,5 +1,10 @@
 films_id_params = [
-    ("2a090dde-f688-46fe-a9f4-b781a985275e", "Star Wars: Knights of the Old Republic", 9.6, 200),
+    (
+        "2a090dde-f688-46fe-a9f4-b781a985275e",
+        "Star Wars: Knights of the Old Republic",
+        9.6,
+        200,
+    ),
     ("fd78a0e5-d4ec-435e-8994-4ccbdfc4e60b", "Lone Star Restoration", 8.7, 200),
     ("3f8873be-f6b1-4f3f-8a01-873924659851", "Justin Bieber: A Star Was Born", 1, 200),
     ("3f8873be-f6b1-4f3f-8000-873924659851", None, None, 404),

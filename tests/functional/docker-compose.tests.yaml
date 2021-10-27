@@ -6,7 +6,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-#    command: pytest -v .
     depends_on:
       - movies-elastic
       - movies-redis
