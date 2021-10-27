@@ -25,4 +25,4 @@ async def elastic_setup(es_client: AsyncElasticsearch) -> None:
 
 async def redis_setup(redis_client: Redis) -> None:
     """Удалить все из редиса."""
-    await redis_client.flushall()
+    redis_client.flushdb(async_op=False)

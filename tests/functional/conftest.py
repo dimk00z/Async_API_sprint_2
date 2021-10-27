@@ -21,7 +21,7 @@ def settings():
     return Settings()
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="session", autouse=True)
 async def elastic_client(settings):
     """Установка соединения + настройка Elastic клиента."""
     client = await elastic_connect(host=settings.es_host)
@@ -32,7 +32,7 @@ async def elastic_client(settings):
     await client.close()
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="session", autouse=True)
 async def redis_client(settings):
     """Установка соединения + настройка Redis клиента."""
     client = await redis_connect(host=settings.redis_host, port=settings.redis_port)
