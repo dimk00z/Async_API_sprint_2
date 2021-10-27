@@ -1,3 +1,4 @@
+import hashlib
 import logging
 from uuid import UUID
 
@@ -8,6 +9,19 @@ from elasticsearch import AsyncElasticsearch
 from elasticsearch.exceptions import RequestError, NotFoundError
 
 CACHE_EXPIRE_IN_SECONDS = 60 * 5  # 5 минут
+
+
+def key_builder(*args, **kwargs):
+    # key = hash(args + (kwd_mark,) + tuple(sorted(kwargs.items())))
+    for arg in args:
+        print(arg)
+
+    for key, value in kwargs.items():
+        print(key, value)
+
+    args = "".join([f"{key}:{value}" for key, value in kwargs.items()])
+    print(hashlib.md5(args.encode()).hexdigest())
+    return 'hashlib.md5("".join([str(item) for item in kwargs.values()]))'
 
 
 class MainService:
@@ -23,6 +37,7 @@ class MainService:
         ttl=CACHE_EXPIRE_IN_SECONDS,
         noself=True,
         **get_redis_cache_config(),
+        key_builder=key_builder,
     )
     async def get_by_uuid(self, uuid: UUID):
         result_object = {}
@@ -39,6 +54,7 @@ class MainService:
         ttl=CACHE_EXPIRE_IN_SECONDS,
         noself=True,
         **get_redis_cache_config(),
+        key_builder=key_builder,
     )
     async def _search(self, index: str = None, **search_options):
         index = index or self.index
