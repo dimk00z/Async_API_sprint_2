@@ -9,9 +9,13 @@ from testdata.films_test_data import (
 )
 
 
-@pytest.mark.parametrize("film_uuid, title, imdb_rating, expected_response_status", films_id_params)
+@pytest.mark.parametrize(
+    "film_uuid, title, imdb_rating, expected_response_status", films_id_params
+)
 @pytest.mark.asyncio
-async def test_film_by_id(get_request, film_uuid, title, imdb_rating, expected_response_status):
+async def test_film_by_id(
+    get_request, film_uuid, title, imdb_rating, expected_response_status
+):
     response = await get_request(f"/film/{film_uuid}")
     assert response.status == expected_response_status
     assert response.body.get("title", None) == title
@@ -32,9 +36,13 @@ async def test_film_pages(get_request, page_number, expected_response_status):
     assert response.status == expected_response_status
 
 
-@pytest.mark.parametrize("page_number, page_len, expected_response_status", films_len_pages_params)
+@pytest.mark.parametrize(
+    "page_number, page_len, expected_response_status", films_len_pages_params
+)
 @pytest.mark.asyncio
-async def test_film_len_pages(get_request, page_number, page_len, expected_response_status):
+async def test_film_len_pages(
+    get_request, page_number, page_len, expected_response_status
+):
     response = await get_request(f"/film", {"page[size]": page_number})
     assert response.status == expected_response_status
     assert len(response.body) == page_len
@@ -47,7 +55,9 @@ async def test_film_pages(get_request, genre_uuid, expected_response_status):
     assert response.status == expected_response_status
 
 
-@pytest.mark.parametrize("query, page_len, expected_response_status", films_query_params)
+@pytest.mark.parametrize(
+    "query, page_len, expected_response_status", films_query_params
+)
 @pytest.mark.asyncio
 async def test_film_search(get_request, query, page_len, expected_response_status):
     response = await get_request(f"/film/search", {"query": query})

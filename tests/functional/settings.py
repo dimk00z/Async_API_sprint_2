@@ -2,6 +2,7 @@ from pydantic import Field, BaseSettings
 
 CONNECTIONS_MAX_TIME = 60
 
+ES_SCHEMA_FILE = "testdata/indexes/schema.json"
 ES_INDEXES_FILES = (
     ("movies", "testdata/indexes/movies.json"),
     ("genres", "testdata/indexes/genres.json"),
