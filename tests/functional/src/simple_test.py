@@ -19,8 +19,10 @@ async def test_elastic(elastic_client: AsyncElasticsearch):
 @pytest.mark.skip  # пока пометил для пропуска
 async def test_redis(redis_client: Redis):
     """Проверить что в Redis нет ключей + базовые операции с ним."""
-    keys = await redis_client.keys()
+    keys = await redis_client.keys("*")
     assert len(keys) == 0
 
     await redis_client.set(FILM_ID, "Star Wars: Episode IV - A New Hope")
-    assert (await redis_client.get(FILM_ID)).decode() == "Star Wars: Episode IV - A New Hope"
+    assert (
+        await redis_client.get(FILM_ID)
+    ).decode() == "Star Wars: Episode IV - A New Hope"

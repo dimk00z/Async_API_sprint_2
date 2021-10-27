@@ -1,0 +1,30 @@
+version: '3'
+
+x-movies-async-api: &movies-async-api
+  image: movies-async-api
+  build:
+    context: ../../async_api
+    dockerfile: Dockerfile
+
+services:
+  movies-async-api:
+    <<: *movies-async-api
+    container_name: movies-async-api
+    command: >
+      uvicorn main:app
+        --host 0.0.0.0
+        --port 8000
+        --use-colors
+        --reload
+    volumes:
+      # Таким образом при изменении кода не нужно ребилдить образ: uvicorn запущен с флагом --reload
+      # и детектит изменения в файлах. Нужно ребилдить только при изменении зависимостей.
+      - "../../async_api/src:/code"
+    ports:
+      - "8000:8000"
+    depends_on:
+      - movies-elastic
+      - movies-redis
+    environment:
+      - "ES_HOST=http://movies-elastic:9200"
+      - "REDIS_HOST=movies-redis"
