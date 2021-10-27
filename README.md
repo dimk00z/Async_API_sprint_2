@@ -23,8 +23,7 @@
 ### Способ 3 (все в docker)
 1. Запустить все в docker:
    ```shell
-   docker-compose \                                                                                          ✔  dimk00z_Async_API_sprint_2 🐍 
-      -f docker-compose.infra.yaml \
+   docker-compose -f docker-compose.infra.yaml \
       -f docker-compose.api.yaml \
       -f docker-compose.tests.yaml \
       up -d --build
