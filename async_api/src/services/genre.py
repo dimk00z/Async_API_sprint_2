@@ -11,8 +11,8 @@ class GenreService(MainService):
     index = "genres"
     model = Genre
 
-    async def genre_list(self) -> list[Genre]:
-        searched_genres = await self._search(query={"match_all": {}})
+    async def genre_list(self, page_size: int = 100) -> list[Genre]:
+        searched_genres = await self._search(query={"match_all": {}}, size=page_size)
         return [self.model(**doc["_source"]) for doc in searched_genres]
 
 
