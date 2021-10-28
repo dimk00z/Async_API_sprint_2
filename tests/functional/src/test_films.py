@@ -1,5 +1,3 @@
-from unittest import TestCase
-
 import pytest
 from testdata.films_test_data import (
     FILMS_GENRES,
@@ -10,12 +8,12 @@ from testdata.films_test_data import (
     FILMS_LEN_PAGES_PARAMS,
 )
 
-test_case_helper = TestCase()
-
 
 @pytest.mark.parametrize("film_uuid,expected_status,expected_body", FILM_BY_UUID_DATA)
 @pytest.mark.asyncio
-async def test_film_by_uuid(get_request, film_uuid, expected_status, expected_body):
+async def test_film_by_uuid(
+    get_request, test_case_helper, film_uuid, expected_status, expected_body
+):
     response = await get_request(f"/film/{film_uuid}")
 
     assert response.status == expected_status
@@ -24,7 +22,9 @@ async def test_film_by_uuid(get_request, film_uuid, expected_status, expected_bo
 
 @pytest.mark.parametrize("params,expected_status,expected_body", FILM_SEARCH_DATA)
 @pytest.mark.asyncio
-async def test_film_search(get_request, params, expected_status, expected_body):
+async def test_film_search(
+    get_request, test_case_helper, params, expected_status, expected_body
+):
     response = await get_request("/film/search", params=params)
 
     assert response.status == expected_status
