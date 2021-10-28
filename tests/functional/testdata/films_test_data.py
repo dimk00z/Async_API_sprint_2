@@ -61,6 +61,19 @@ FILM_BY_UUID_DATA = [
         expected_status=404,
         expected_body={"detail": "film not found"},
     ),
+    FilmByUUIDCase(
+        film_uuid="wrong-uuid",
+        expected_status=422,
+        expected_body={
+            "detail": [
+                {
+                    "loc": ["path", "film_uuid"],
+                    "msg": "value is not a valid uuid",
+                    "type": "type_error.uuid",
+                }
+            ]
+        },
+    ),
 ]
 
 FilmSearchCase = namedtuple("FilmSearchCase", ("params", "expected_status", "expected_body"))

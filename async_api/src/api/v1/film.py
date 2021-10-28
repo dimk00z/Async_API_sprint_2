@@ -1,3 +1,4 @@
+from uuid import UUID
 from http import HTTPStatus
 from typing import Optional
 
@@ -27,9 +28,7 @@ async def get_films(
     )
 
     if not films:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="not one film found"
-        )
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="not one film found")
     if "error" in films:
         return HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail=films["error"])
     return [
@@ -78,7 +77,7 @@ async def films_search(
 
 @router.get("/{film_uuid}", response_model=Film)
 async def film_details(
-    film_uuid: str,
+    film_uuid: UUID,
     film_service: FilmService = Depends(get_film_service),
 ) -> Film:
     film = await film_service.get_by_uuid(uuid=film_uuid)
