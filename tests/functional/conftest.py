@@ -40,11 +40,8 @@ async def redis_client(settings):
     await redis_setup(redis_client=client)
 
     yield client
-<<<<<<< HEAD
-=======
     client.close()
     await client.wait_closed()
->>>>>>> dev
 
 
 @pytest.fixture(scope="session")
