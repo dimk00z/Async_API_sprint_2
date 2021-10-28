@@ -3,8 +3,8 @@ from http import HTTPStatus
 from typing import Optional
 
 from models.genre import Genre
-from fastapi import Depends, APIRouter, HTTPException, Query
 from services.genre import GenreService, get_genre_service
+from fastapi import Query, Depends, APIRouter, HTTPException
 
 router = APIRouter()
 
@@ -12,9 +12,9 @@ genres = Optional[list[dict[str, str]]]
 
 
 async def get_genres(
-        genres_service: GenreService = Depends(get_genre_service),
-        page_number: int = 0,
-        page_size: int = 50
+    genres_service: GenreService = Depends(get_genre_service),
+    page_number: int = 0,
+    page_size: int = 50,
 ):
     genres = await genres_service.get_genres(
         page_number=page_number,
@@ -29,9 +29,9 @@ async def get_genres(
 
 @router.get("/")
 async def genres_list(
-        genres_service: GenreService = Depends(get_genre_service),
-        page_number: int = Query(1, alias="page[number]"),
-        page_size: int = Query(50, alias="page[size]"),
+    genres_service: GenreService = Depends(get_genre_service),
+    page_number: int = Query(1, alias="page[number]"),
+    page_size: int = Query(50, alias="page[size]"),
 ) -> list[Genre]:
     return await get_genres(
         genres_service=genres_service,
@@ -42,8 +42,8 @@ async def genres_list(
 
 @router.get("/{genre_uuid}")
 async def genre_details(
-        genre_uuid: UUID,
-        genre_service: GenreService = Depends(get_genre_service),
+    genre_uuid: UUID,
+    genre_service: GenreService = Depends(get_genre_service),
 ) -> Optional[Genre]:
     genre = await genre_service.get_by_uuid(uuid=genre_uuid)
     if genre:

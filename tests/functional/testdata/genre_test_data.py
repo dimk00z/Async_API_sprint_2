@@ -1,6 +1,5 @@
 from collections import namedtuple
 
-
 # /genre/{genre_uuid}
 GenreByUUIDCase = namedtuple(
     "GenreByUUIDCase", ("genre_uuid", "expected_status", "expected_body")
@@ -35,9 +34,7 @@ GENRE_BY_UUID_DATA = [
 ]
 
 # /genre
-GenresCase = namedtuple(
-    "GenresCase", ("expected_status", "expected_body")
-)
+GenresCase = namedtuple("GenresCase", ("expected_status", "expected_body"))
 GENRE_DATA = [
     GenresCase(
         expected_status=200,
@@ -67,7 +64,7 @@ GENRE_DATA = [
             {"uuid": "2f89e116-4827-4ff4-853c-b6e058f71e31", "name": "Sport"},
             {"uuid": "31cabbb5-6389-45c6-9b48-f7f173f6c40f", "name": "Talk-Show"},
             {"uuid": "f24fd632-b1a5-4273-a835-0119bd12f829", "name": "News"},
-            {"uuid": "6d141ad2-d407-4252-bda4-95590aaf062a", "name": "Documentary"}
+            {"uuid": "6d141ad2-d407-4252-bda4-95590aaf062a", "name": "Documentary"},
         ],
     ),
 ]
