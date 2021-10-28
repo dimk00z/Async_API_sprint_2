@@ -63,17 +63,10 @@ def event_loop(request):
 
 
 @pytest.fixture
-<<<<<<< HEAD
-def get_request(session):
-    async def inner(method: str, params: dict = None) -> HTTPResponse:
-        params = params or {}
-        async_api_host = Settings().async_api_host
-=======
 def get_request(session, settings):
     async def inner(method: str, params: dict = None) -> HTTPResponse:
         params = params or {}
         async_api_host = settings.async_api_host
->>>>>>> dev
         # export ASYNC_API_HOST="http://178.154.213.182:8000/api/v1" - для проверки на живом
         # python -m pytest -vv
         url = f"{async_api_host}{method}"
