@@ -1,4 +1,5 @@
 import asyncio
+from unittest import TestCase
 from dataclasses import dataclass
 
 import pytest
@@ -19,6 +20,13 @@ class HTTPResponse:
 @pytest.fixture(scope="session")
 def settings():
     return get_settings()
+
+
+@pytest.fixture(scope="session")
+def test_case_helper():
+    # Для использования функций по типу .assertEqual().
+    # Позволяет "глубоко" сравнить объекты, например, два dict.
+    return TestCase()
 
 
 @pytest.fixture(scope="session", autouse=get_settings().should_wait_refresh)
