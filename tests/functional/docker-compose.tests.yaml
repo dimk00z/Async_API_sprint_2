@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  movies-tests:
+    container_name: movies-tests
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - movies-elastic
+      - movies-redis
+      - movies-async-api
+    environment:
+      - "ES_HOST=http://movies-elastic:9200"
+      - "REDIS_HOST=movies-redis"
+      - "ASYNC_API_HOST=http://movies-async-api:8000/api/v1"

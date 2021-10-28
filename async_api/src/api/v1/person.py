@@ -4,7 +4,7 @@ from http import HTTPStatus
 
 from pydantic import BaseModel
 from models.person import PersonRole
-from fastapi import Depends, APIRouter, HTTPException
+from fastapi import Query, Depends, APIRouter, HTTPException
 from services.person import PersonService, get_person_service
 
 router = APIRouter()
@@ -25,11 +25,11 @@ class Person(BaseModel):
 @router.get("/search", response_model=list[Person])
 async def person_search(
     query: str,
-    page_number: int = 0,
-    page_size: int = 25,
+    page_number: int = Query(0, alias="page[number]"),
+    page_size: int = Query(25, alias="page[size]"),
     person_service: PersonService = Depends(get_person_service),
 ) -> list[Person]:
-    """Check me: http://localhost:8000/api/v1/person/search?query=george&page_number=0&page_size=5"""
+    """Check me: http://localhost:8000/api/v1/person/search?query=george&page[number]=0&page[size]=5"""
     persons = await person_service.get_by_full_name(
         query_full_name=query, page_number=page_number, page_size=page_size
     )
@@ -52,6 +52,10 @@ async def person_films(
     person_service: PersonService = Depends(get_person_service),
 ) -> list[PersonFilm]:
     """Check me: http://localhost:8000/api/v1/person/a5a8f573-3cee-4ccc-8a2b-91cb9f55250a/film"""
+    person = await person_service.get_by_uuid(person_uuid)
+    if not person:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Person not found")
+
     person_films = await person_service.get_films_by_person_uuid(person_uuid)
 
     return [
@@ -66,9 +70,9 @@ async def person_details(
 ) -> Person:
     """Check me: http://localhost:8000/api/v1/person/a5a8f573-3cee-4ccc-8a2b-91cb9f55250a"""
     person = await person_service.get_by_uuid(person_uuid)
-    person_films = await person_service.get_films_by_person_uuid(person_uuid)
-
     if not person:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Person not found")
+
+    person_films = await person_service.get_films_by_person_uuid(person_uuid)
 
     return Person(uuid=person.uuid, full_name=person.full_name, films=person_films)

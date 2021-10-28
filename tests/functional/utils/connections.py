@@ -3,8 +3,8 @@ import logging
 
 import backoff
 import aioredis
-import settings
 from elasticsearch import AsyncElasticsearch
+from settings import CONNECTIONS_MAX_TIME, Settings
 
 
 def backoff_handler(details):
@@ -19,10 +19,10 @@ def backoff_handler(details):
     backoff.expo,
     (ConnectionError,),
     on_backoff=backoff_handler,
-    max_time=settings.CONNECTIONS_MAX_TIME,
+    max_time=CONNECTIONS_MAX_TIME,
 )
 async def redis_connect(*, host: str, port: int) -> aioredis.Redis:
-    redis = aioredis.from_url(f"redis://{host}:{port}")
+    redis = await aioredis.create_redis(f"redis://{host}:{port}")
     pong = await redis.ping()
     if not pong:
         raise ConnectionError("Connection failed")
@@ -33,7 +33,7 @@ async def redis_connect(*, host: str, port: int) -> aioredis.Redis:
     backoff.expo,
     (ConnectionError,),
     on_backoff=backoff_handler,
-    max_time=settings.CONNECTIONS_MAX_TIME,
+    max_time=CONNECTIONS_MAX_TIME,
 )
 async def elastic_connect(*, host: str) -> AsyncElasticsearch:
     elastic = AsyncElasticsearch(hosts=host, verify_certs=True)
@@ -43,9 +43,14 @@ async def elastic_connect(*, host: str) -> AsyncElasticsearch:
 
 
 async def main():
-    "Waiters for Elasticsearch and REDIS"
-    await elastic_connect(host=settings.es_host)
-    await redis_connect(host=settings.redis_host, port=settings.redis_port)
+    """Waiters for Elasticsearch, REDIS"""
+    settings = Settings()
+    es = await elastic_connect(host=settings.es_host)
+    await es.close()
+
+    redis = await redis_connect(host=settings.redis_host, port=settings.redis_port)
+    redis.close()
+    await redis.wait_closed()
 
 
 if __name__ == "__main__":

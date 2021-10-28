@@ -21,7 +21,7 @@ def settings():
     return Settings()
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="session", autouse=True)
 async def elastic_client(settings):
     """Установка соединения + настройка Elastic клиента."""
     client = await elastic_connect(host=settings.es_host)
@@ -32,7 +32,7 @@ async def elastic_client(settings):
     await client.close()
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="session", autouse=True)
 async def redis_client(settings):
     """Установка соединения + настройка Redis клиента."""
     client = await redis_connect(host=settings.redis_host, port=settings.redis_port)
@@ -40,6 +40,11 @@ async def redis_client(settings):
     await redis_setup(redis_client=client)
 
     yield client
+<<<<<<< HEAD
+=======
+    client.close()
+    await client.wait_closed()
+>>>>>>> dev
 
 
 @pytest.fixture(scope="session")
@@ -58,10 +63,17 @@ def event_loop(request):
 
 
 @pytest.fixture
+<<<<<<< HEAD
 def get_request(session):
     async def inner(method: str, params: dict = None) -> HTTPResponse:
         params = params or {}
         async_api_host = Settings().async_api_host
+=======
+def get_request(session, settings):
+    async def inner(method: str, params: dict = None) -> HTTPResponse:
+        params = params or {}
+        async_api_host = settings.async_api_host
+>>>>>>> dev
         # export ASYNC_API_HOST="http://178.154.213.182:8000/api/v1" - для проверки на живом
         # python -m pytest -vv
         url = f"{async_api_host}{method}"
