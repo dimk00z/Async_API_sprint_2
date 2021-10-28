@@ -13,7 +13,7 @@ genres = Optional[list[dict[str, str]]]
 
 async def get_genres(
         genres_service: GenreService = Depends(get_genre_service),
-        page_number: int = 1,
+        page_number: int = 0,
         page_size: int = 50
 ):
     genres = await genres_service.get_genres(
@@ -24,6 +24,7 @@ async def get_genres(
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND, detail="not one genre found"
         )
+    return genres
 
 
 @router.get("/")
@@ -31,7 +32,7 @@ async def genres_list(
         genres_service: GenreService = Depends(get_genre_service),
         page_number: int = Query(1, alias="page[number]"),
         page_size: int = Query(50, alias="page[size]"),
-) -> list[dict]:
+) -> list[Genre]:
     return await get_genres(
         genres_service=genres_service,
         page_number=page_number,
