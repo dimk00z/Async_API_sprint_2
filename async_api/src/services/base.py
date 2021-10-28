@@ -11,19 +11,6 @@ from elasticsearch.exceptions import RequestError, NotFoundError
 CACHE_EXPIRE_IN_SECONDS = 60 * 5  # 5 минут
 
 
-def key_builder(*args, **kwargs):
-    # key = hash(args + (kwd_mark,) + tuple(sorted(kwargs.items())))
-    for arg in args:
-        print(arg)
-
-    for key, value in kwargs.items():
-        print(key, value)
-
-    args = "".join([f"{key}:{value}" for key, value in kwargs.items()])
-    print(hashlib.md5(args.encode()).hexdigest())
-    return 'hashlib.md5("".join([str(item) for item in kwargs.values()]))'
-
-
 class MainService:
     # Определяем базовую модель и индекс, будет указываться при добавлении модели жанра
     model = BaseModel
@@ -32,6 +19,13 @@ class MainService:
     # Инициализация класса, определение настроек redis и elastic
     def __init__(self, elastic: AsyncElasticsearch):
         self.elastic = elastic
+
+    def key_builder(self, *args, **kwargs):
+        "Генерация хэш ключа для кэша по kwargs"
+
+        args_line: str = str(sorted(kwargs.items()))
+        cache_key = hashlib.md5(args_line.encode()).hexdigest()
+        return cache_key
 
     @cached(
         ttl=CACHE_EXPIRE_IN_SECONDS,
