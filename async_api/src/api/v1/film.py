@@ -1,3 +1,4 @@
+from uuid import UUID
 from http import HTTPStatus
 from typing import Optional
 
@@ -78,7 +79,7 @@ async def films_search(
 
 @router.get("/{film_uuid}", response_model=Film)
 async def film_details(
-    film_uuid: str,
+    film_uuid: UUID,
     film_service: FilmService = Depends(get_film_service),
 ) -> Film:
     film = await film_service.get_by_uuid(uuid=film_uuid)
