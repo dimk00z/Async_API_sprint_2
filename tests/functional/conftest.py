@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 import pytest
 import aiohttp
-from settings import Settings
+from settings import get_settings
 from multidict import CIMultiDictProxy
 from utils.setup import redis_setup, elastic_setup
 from utils.connections import redis_connect, elastic_connect
@@ -18,10 +18,10 @@ class HTTPResponse:
 
 @pytest.fixture(scope="session")
 def settings():
-    return Settings()
+    return get_settings()
 
 
-@pytest.fixture(scope="session", autouse=True)
+@pytest.fixture(scope="session", autouse=get_settings().should_wait_refresh)
 async def elastic_client(settings):
     """Установка соединения + настройка Elastic клиента."""
     client = await elastic_connect(host=settings.es_host)
@@ -32,7 +32,7 @@ async def elastic_client(settings):
     await client.close()
 
 
-@pytest.fixture(scope="session", autouse=True)
+@pytest.fixture(scope="session", autouse=get_settings().should_wait_refresh)
 async def redis_client(settings):
     """Установка соединения + настройка Redis клиента."""
     client = await redis_connect(host=settings.redis_host, port=settings.redis_port)

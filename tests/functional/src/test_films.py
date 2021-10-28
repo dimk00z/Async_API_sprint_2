@@ -1,35 +1,44 @@
+from unittest import TestCase
+
 import pytest
 from testdata.films_test_data import (
-    films_genres,
-    films_id_params,
-    films_pages_params,
-    films_query_params,
-    films_sorting_params,
-    films_len_pages_params,
+    FILMS_GENRES,
+    FILM_SEARCH_DATA,
+    FILM_BY_UUID_DATA,
+    FILMS_PAGES_PARAMS,
+    FILMS_SORTING_PARAMS,
+    FILMS_LEN_PAGES_PARAMS,
 )
 
+test_case_helper = TestCase()
 
-@pytest.mark.parametrize(
-    "film_uuid, title, imdb_rating, expected_response_status", films_id_params
-)
+
+@pytest.mark.parametrize("film_uuid,expected_status,expected_body", FILM_BY_UUID_DATA)
 @pytest.mark.asyncio
-async def test_film_by_id(
-    get_request, film_uuid, title, imdb_rating, expected_response_status
-):
+async def test_film_by_uuid(get_request, film_uuid, expected_status, expected_body):
     response = await get_request(f"/film/{film_uuid}")
-    assert response.status == expected_response_status
-    assert response.body.get("title", None) == title
-    assert response.body.get("imdb_rating", None) == imdb_rating
+
+    assert response.status == expected_status
+    test_case_helper.assertEqual(response.body, expected_body)
 
 
-@pytest.mark.parametrize("sorting", films_sorting_params)
+@pytest.mark.parametrize("params,expected_status,expected_body", FILM_SEARCH_DATA)
+@pytest.mark.asyncio
+async def test_film_search(get_request, params, expected_status, expected_body):
+    response = await get_request("/film/search", params=params)
+
+    assert response.status == expected_status
+    test_case_helper.assertEqual(response.body, expected_body)
+
+
+@pytest.mark.parametrize("sorting", FILMS_SORTING_PARAMS)
 @pytest.mark.asyncio
 async def test_film_imdb_sorting(get_request, sorting):
     response = await get_request(f"/film", {"sort": sorting})
     assert response.status == 200
 
 
-@pytest.mark.parametrize("page_number, expected_response_status", films_pages_params)
+@pytest.mark.parametrize("page_number, expected_response_status", FILMS_PAGES_PARAMS)
 @pytest.mark.asyncio
 async def test_film_pages(get_request, page_number, expected_response_status):
     response = await get_request(f"/film", {"page[number]": page_number})
@@ -37,7 +46,7 @@ async def test_film_pages(get_request, page_number, expected_response_status):
 
 
 @pytest.mark.parametrize(
-    "page_number, page_len, expected_response_status", films_len_pages_params
+    "page_number, page_len, expected_response_status", FILMS_LEN_PAGES_PARAMS
 )
 @pytest.mark.asyncio
 async def test_film_len_pages(
@@ -48,18 +57,8 @@ async def test_film_len_pages(
     assert len(response.body) == page_len
 
 
-@pytest.mark.parametrize("genre_uuid, expected_response_status", films_genres)
+@pytest.mark.parametrize("genre_uuid, expected_response_status", FILMS_GENRES)
 @pytest.mark.asyncio
-async def test_film_pages(get_request, genre_uuid, expected_response_status):
+async def test_film_genre_sort(get_request, genre_uuid, expected_response_status):
     response = await get_request(f"/film", {"filter[genre]": genre_uuid})
     assert response.status == expected_response_status
-
-
-@pytest.mark.parametrize(
-    "query, page_len, expected_response_status", films_query_params
-)
-@pytest.mark.asyncio
-async def test_film_search(get_request, query, page_len, expected_response_status):
-    response = await get_request(f"/film/search", {"query": query})
-    assert response.status == expected_response_status
-    assert len(response.body) == page_len
