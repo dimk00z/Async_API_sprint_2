@@ -1,3 +1,5 @@
+from functools import lru_cache
+
 from pydantic import Field, BaseSettings
 
 CONNECTIONS_MAX_TIME = 60
@@ -16,3 +18,8 @@ class Settings(BaseSettings):
     redis_port: int = Field(6379, env="REDIS_PORT")
     async_api_host: str = Field("http://127.0.0.1:8000/api/v1", env="ASYNC_API_HOST")
     should_wait_refresh: bool = Field(True, env="SHOULD_WAIT_REFRESH")
+
+
+@lru_cache
+def get_settings():
+    return Settings()

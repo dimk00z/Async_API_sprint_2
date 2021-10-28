@@ -1,10 +1,9 @@
 import asyncio
-from functools import lru_cache
 from dataclasses import dataclass
 
 import pytest
 import aiohttp
-from settings import Settings
+from settings import get_settings
 from multidict import CIMultiDictProxy
 from utils.setup import redis_setup, elastic_setup
 from utils.connections import redis_connect, elastic_connect
@@ -15,11 +14,6 @@ class HTTPResponse:
     body: dict
     headers: CIMultiDictProxy[str]
     status: int
-
-
-@lru_cache
-def get_settings():
-    return Settings()
 
 
 @pytest.fixture(scope="session")

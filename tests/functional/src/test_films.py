@@ -45,9 +45,13 @@ async def test_film_pages(get_request, page_number, expected_response_status):
     assert response.status == expected_response_status
 
 
-@pytest.mark.parametrize("page_number, page_len, expected_response_status", FILMS_LEN_PAGES_PARAMS)
+@pytest.mark.parametrize(
+    "page_number, page_len, expected_response_status", FILMS_LEN_PAGES_PARAMS
+)
 @pytest.mark.asyncio
-async def test_film_len_pages(get_request, page_number, page_len, expected_response_status):
+async def test_film_len_pages(
+    get_request, page_number, page_len, expected_response_status
+):
     response = await get_request(f"/film", {"page[size]": page_number})
     assert response.status == expected_response_status
     assert len(response.body) == page_len
