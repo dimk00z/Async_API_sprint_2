@@ -1,4 +1,5 @@
 import asyncio
+from functools import lru_cache
 from dataclasses import dataclass
 
 import pytest
@@ -16,12 +17,17 @@ class HTTPResponse:
     status: int
 
 
-@pytest.fixture(scope="session")
-def settings():
+@lru_cache
+def get_settings():
     return Settings()
 
 
-@pytest.fixture(scope="session", autouse=Settings().should_flush_all)
+@pytest.fixture(scope="session")
+def settings():
+    return get_settings()
+
+
+@pytest.fixture(scope="session", autouse=get_settings().should_wait_refresh)
 async def elastic_client(settings):
     """Установка соединения + настройка Elastic клиента."""
     client = await elastic_connect(host=settings.es_host)
@@ -32,7 +38,7 @@ async def elastic_client(settings):
     await client.close()
 
 
-@pytest.fixture(scope="session", autouse=Settings().should_flush_all)
+@pytest.fixture(scope="session", autouse=get_settings().should_wait_refresh)
 async def redis_client(settings):
     """Установка соединения + настройка Redis клиента."""
     client = await redis_connect(host=settings.redis_host, port=settings.redis_port)
