@@ -1,14 +1,11 @@
 version: '3'
 
-x-movies-async-api: &movies-async-api
-  image: movies-async-api
-  build:
-    context: ../../async_api
-    dockerfile: Dockerfile
-
 services:
   movies-async-api:
-    <<: *movies-async-api
+    image: movies-async-api
+    build:
+      context: ../../async_api
+      dockerfile: Dockerfile
     container_name: movies-async-api
     command: >
       uvicorn main:app
