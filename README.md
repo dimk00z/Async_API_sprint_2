@@ -6,14 +6,16 @@
 
 ## Тестирование
 ### Способ 1 (только инфраструктура в docker)
-1. Запустить `elastic` + `redis` в `Docker`:
+[docker-compose.infra.yaml](https://github.com/dimk00z/Async_API_sprint_2/blob/main/tests/functional/docker-compose.infra.yaml)
+1. Запустить `elastic` + `redis` в `Docker` :
    ```shell
    docker-compose -f docker-compose.infra.yaml up -d
    ```
-2. Запустить `async-api` через `python main.py`
+2. Запустить `async-api` через `python main.py` 
 3. Запуск тестов через `PYTHONPATH=. pytest .`
 
-### Способ 2 (инфраструктура + async_api в docker)
+### Способ 2 (инфраструктура + async_api в docker) 
+[docker-compose.infra.yaml](https://github.com/dimk00z/Async_API_sprint_2/blob/main/tests/functional/docker-compose.infra.yaml)+[docker-compose.api.yaml](https://github.com/dimk00z/Async_API_sprint_2/blob/main/tests/functional/docker-compose.api.yamll)
 1. Запустить `elastic` + `redis` + `api` в `Docker`:
    ```shell
    docker-compose \
@@ -24,7 +26,8 @@
 2. Если у `async-api` изменился код, то он перезагрузится автоматически. См. `docker-compose.api.yaml`
 3. Запуск тестов через `PYTHONPATH=. pytest .`
 
-### Способ 3 (все в docker)
+### Способ 3 (все в docker) 
+[docker-compose.infra.yaml](https://github.com/dimk00z/Async_API_sprint_2/blob/main/tests/functional/docker-compose.infra.yaml)+[docker-compose.api.yaml](https://github.com/dimk00z/Async_API_sprint_2/blob/main/tests/functional/docker-compose.api.yamll)+[docker-compose.tests.yaml](https://github.com/dimk00z/Async_API_sprint_2/blob/main/tests/functional/docker-compose.tests.yamll)
 1. Запустить все в docker:
    ```shell
    docker-compose -f docker-compose.infra.yaml \
