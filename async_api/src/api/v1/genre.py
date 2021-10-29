@@ -27,9 +27,7 @@ async def get_genres(
     return genres
 
 
-@router.get(
-    "/",
-    summary="Список жанров")
+@router.get("/", summary="Список жанров")
 async def genres_list(
     genres_service: GenreService = Depends(get_genre_service),
     page_number: int = Query(1, alias="page[number]"),
@@ -47,9 +45,7 @@ async def genres_list(
     )
 
 
-@router.get(
-    "/{genre_uuid}",
-    summary="Поиск жанра по uuid")
+@router.get("/{genre_uuid}", summary="Поиск жанра по uuid")
 async def genre_details(
     genre_uuid: UUID,
     genre_service: GenreService = Depends(get_genre_service),

@@ -9,10 +9,12 @@ from api.v1 import film, genre, person
 from fastapi.responses import ORJSONResponse
 
 app = FastAPI(
-    title=config.PROJECT_NAME,
     docs_url="/api/openapi",
     openapi_url="/api/openapi.json",
     default_response_class=ORJSONResponse,
+    title="Read-only API для онлайн-кинотеатра",
+    description="Информация о фильмах, жанрах и людях, участвовавших в создании произведения",
+    version="1.0.0",
 )
 
 
@@ -28,9 +30,9 @@ async def shutdown():
 
 # Подключаем роутер к серверу, указав префикс /v1/film
 # Теги указываем для удобства навигации по документации
-app.include_router(film.router, prefix="/api/v1/film", tags=["film"])
-app.include_router(person.router, prefix="/api/v1/person", tags=["person"])
-app.include_router(genre.router, prefix="/api/v1/genre", tags=["genre"])
+app.include_router(film.router, prefix="/api/v1/film", tags=["Фильмы"])
+app.include_router(person.router, prefix="/api/v1/person", tags=["Персоны"])
+app.include_router(genre.router, prefix="/api/v1/genre", tags=["Жанры"])
 
 if __name__ == "__main__":
     uvicorn.run(
