@@ -22,14 +22,22 @@ class Person(BaseModel):
     films: list[PersonFilm] = []
 
 
-@router.get("/search", response_model=list[Person])
+@router.get("/search", response_model=list[Person], summary="Поиск по персонам")
 async def person_search(
     query: str,
     page_number: int = Query(0, alias="page[number]"),
     page_size: int = Query(25, alias="page[size]"),
     person_service: PersonService = Depends(get_person_service),
 ) -> list[Person]:
-    """Check me: http://localhost:8000/api/v1/person/search?query=george&page[number]=0&page[size]=5"""
+    """
+    Для вывода доступны следующие параметры:
+    - **query**: строка для поиска
+    - **page[number]**: запрашиваемая страница
+    - **page[size]**: размер страницы
+
+    Check me: http://localhost:8000/api/v1/person/search?query=george&page[number]=0&page[size]=5
+    """
+
     persons = await person_service.get_by_full_name(
         query_full_name=query, page_number=page_number, page_size=page_size
     )
@@ -46,29 +54,40 @@ async def person_search(
     ]
 
 
-@router.get("/{person_uuid}/film")
+@router.get("/{person_uuid}/film", summary="Вывод фильмов для персоны")
 async def person_films(
     person_uuid: UUID,
     person_service: PersonService = Depends(get_person_service),
 ) -> list[PersonFilm]:
-    """Check me: http://localhost:8000/api/v1/person/a5a8f573-3cee-4ccc-8a2b-91cb9f55250a/film"""
+    """
+    Вывод информации о фильма для персоне по uuid:
+
+    - **person_uuid**: требуемое поле
+
+    Check me: http://localhost:8000/api/v1/person/a5a8f573-3cee-4ccc-8a2b-91cb9f55250a/film
+    """
+
     person = await person_service.get_by_uuid(person_uuid)
     if not person:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Person not found")
 
     person_films = await person_service.get_films_by_person_uuid(person_uuid)
 
-    return [
-        PersonFilm(uuid=film.uuid, title=film.title, role=film.role)
-        for film in person_films
-    ]
+    return [PersonFilm(uuid=film.uuid, title=film.title, role=film.role) for film in person_films]
 
 
-@router.get("/{person_uuid}", response_model=Person)
+@router.get("/{person_uuid}", response_model=Person, summary="Подробная информация о персоне")
 async def person_details(
     person_uuid: UUID, person_service: PersonService = Depends(get_person_service)
 ) -> Person:
-    """Check me: http://localhost:8000/api/v1/person/a5a8f573-3cee-4ccc-8a2b-91cb9f55250a"""
+    """
+    Вывод информации о персоне по uuid:
+
+    - **person_uuid**: требуемое поле
+
+    Check me: http://localhost:8000/api/v1/person/a5a8f573-3cee-4ccc-8a2b-91cb9f55250a
+    """
+
     person = await person_service.get_by_uuid(person_uuid)
     if not person:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Person not found")
