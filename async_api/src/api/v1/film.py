@@ -28,7 +28,9 @@ async def get_films(
     )
 
     if not films:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="not one film found")
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail="not one film found"
+        )
     if "error" in films:
         return HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail=films["error"])
     return [

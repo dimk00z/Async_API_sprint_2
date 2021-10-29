@@ -73,10 +73,15 @@ async def person_films(
 
     person_films = await person_service.get_films_by_person_uuid(person_uuid)
 
-    return [PersonFilm(uuid=film.uuid, title=film.title, role=film.role) for film in person_films]
+    return [
+        PersonFilm(uuid=film.uuid, title=film.title, role=film.role)
+        for film in person_films
+    ]
 
 
-@router.get("/{person_uuid}", response_model=Person, summary="Подробная информация о персоне")
+@router.get(
+    "/{person_uuid}", response_model=Person, summary="Подробная информация о персоне"
+)
 async def person_details(
     person_uuid: UUID, person_service: PersonService = Depends(get_person_service)
 ) -> Person:
