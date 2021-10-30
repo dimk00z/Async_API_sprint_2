@@ -11,22 +11,9 @@ router = APIRouter()
 persons = Optional[list[dict[str, str]]]
 
 
-async def get_films(
-    film_service: FilmService,
-    **end_point_params
-    # filter_genre: Optional[str] = "",
-    # sort: Optional[str] = Query(None, regex="^-?[a-zA-Z_]+$"),
-    # page_number: int = 1,
-    # page_size: int = 50,
-    # query: Optional[str] = "",
-):
+async def get_films(film_service: FilmService, **end_point_params):
     films = await film_service.get_films(
         **{key: value for key, value in end_point_params.items() if value}
-        # sort=sort,
-        # filter_genre=filter_genre if filter_genre is not Query(None) else "",
-        # page_number=page_number,
-        # page_size=page_size,
-        # query=str(query),
     )
 
     if not films:
