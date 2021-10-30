@@ -22,33 +22,33 @@ async def test_film_by_uuid(
 
 
 @pytest.mark.parametrize("params,expected_status,expected_body", FILM_SEARCH_DATA)
-async def test_film_search(
-    get_request, test_case_helper, params, expected_status, expected_body
-):
+async def test_film_search(get_request, test_case_helper, params, expected_status, expected_body):
     response = await get_request("/film/search", params=params)
 
     assert response.status == expected_status
     test_case_helper.assertEqual(response.body, expected_body)
 
 
-@pytest.mark.parametrize("sorting", FILMS_SORTING_PARAMS)
-async def test_film_imdb_sorting(get_request, sorting):
-    response = await get_request(f"/film", {"sort": sorting})
-    assert response.status == 200
-
-
-@pytest.mark.parametrize("page_number, expected_response_status", FILMS_PAGES_PARAMS)
-async def test_film_pages(get_request, page_number, expected_response_status):
-    response = await get_request(f"/film", {"page[number]": page_number})
-    assert response.status == expected_response_status
-
-
-@pytest.mark.parametrize(
-    "page_number, page_len, expected_response_status", FILMS_LEN_PAGES_PARAMS
-)
-async def test_film_len_pages(
-    get_request, page_number, page_len, expected_response_status
+@pytest.mark.parametrize("sorting,expected_status,expected_body", FILMS_SORTING_PARAMS)
+async def test_film_imdb_sorting(
+    get_request, test_case_helper, sorting, expected_body, expected_status
 ):
+    response = await get_request(f"/film", {"sort": sorting, "page[size]": 2})
+    assert response.status == expected_status
+    test_case_helper.assertEqual(response.body, expected_body)
+
+
+@pytest.mark.parametrize("page_number, expected_response_status, expected_body", FILMS_PAGES_PARAMS)
+async def test_film_pages(
+    get_request, test_case_helper, page_number, expected_response_status, expected_body
+):
+    response = await get_request(f"/film", {"page[number]": page_number, "page[size]": 2})
+    assert response.status == expected_response_status
+    test_case_helper.assertEqual(response.body, expected_body)
+
+
+@pytest.mark.parametrize("page_number, page_len, expected_response_status", FILMS_LEN_PAGES_PARAMS)
+async def test_film_len_pages(get_request, page_number, page_len, expected_response_status):
     response = await get_request(f"/film", {"page[size]": page_number})
     assert response.status == expected_response_status
     assert len(response.body) == page_len
