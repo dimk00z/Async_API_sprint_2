@@ -49,5 +49,4 @@ class MainService:
                 result_objects = response["hits"]["hits"]
         except (RequestError, NotFoundError) as elastic_error:
             logging.error(elastic_error)
-        finally:
-            return result_objects
+        return result_objects
