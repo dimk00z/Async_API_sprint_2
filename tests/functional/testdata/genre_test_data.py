@@ -2,7 +2,9 @@ from http import HTTPStatus
 from collections import namedtuple
 
 # /genre/{genre_uuid}
-GenreByUUIDCase = namedtuple("GenreByUUIDCase", ("genre_uuid", "expected_status", "expected_body"))
+GenreByUUIDCase = namedtuple(
+    "GenreByUUIDCase", ("genre_uuid", "expected_status", "expected_body")
+)
 GENRE_BY_UUID_DATA = [
     GenreByUUIDCase(
         genre_uuid="6c162475-c7ed-4461-9184-001ef3d9f26e",

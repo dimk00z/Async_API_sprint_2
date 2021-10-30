@@ -1,3 +1,4 @@
+from http import HTTPStatus
 from collections import namedtuple
 
 # /person/{person_uuid}
@@ -77,7 +78,9 @@ PERSON_FILMS_BY_UUID_DATA = [
 ]
 
 # /person/search
-PersonSearchCase = namedtuple("PersonSearchCase", ("params", "expected_status", "expected_body"))
+PersonSearchCase = namedtuple(
+    "PersonSearchCase", ("params", "expected_status", "expected_body")
+)
 PERSON_SEARCH_DATA = [
     PersonSearchCase(
         params={},

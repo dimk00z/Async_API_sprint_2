@@ -1,7 +1,9 @@
 from http import HTTPStatus
 from collections import namedtuple
 
-FilmByUUIDCase = namedtuple("FilmByUUIDCase", ("film_uuid", "expected_status", "expected_body"))
+FilmByUUIDCase = namedtuple(
+    "FilmByUUIDCase", ("film_uuid", "expected_status", "expected_body")
+)
 
 FILM_BY_UUID_DATA = [
     FilmByUUIDCase(
@@ -119,7 +121,9 @@ FILM_BY_UUID_DATA = [
     ),
 ]
 
-FilmSearchCase = namedtuple("FilmSearchCase", ("params", "expected_status", "expected_body"))
+FilmSearchCase = namedtuple(
+    "FilmSearchCase", ("params", "expected_status", "expected_body")
+)
 
 FILM_SEARCH_DATA = [
     FilmSearchCase(
@@ -201,11 +205,15 @@ FILMS_SORTING_PARAMS = (
     FilmRatingSortCase(
         sorting="wrong_field",
         expected_status=HTTPStatus.BAD_REQUEST,
-        expected_body={"detail": "No mapping found for [wrong_field] in order to sort on"},
+        expected_body={
+            "detail": "No mapping found for [wrong_field] in order to sort on"
+        },
     ),
 )
 
-FilmPageCase = namedtuple("FilmPageCase", ("page_number", "expected_status", "expected_body"))
+FilmPageCase = namedtuple(
+    "FilmPageCase", ("page_number", "expected_status", "expected_body")
+)
 
 FILMS_PAGES_PARAMS = (
     FilmPageCase(
@@ -267,22 +275,32 @@ FILMS_PAGES_PARAMS = (
         expected_body={"detail": "not one film found"},
     ),
 )
-FilmLenPagesCase = namedtuple("FilmLenPagesCase", ("page_number", "page_len", "expected_status"))
+FilmLenPagesCase = namedtuple(
+    "FilmLenPagesCase", ("page_number", "page_len", "expected_status")
+)
 
 FILMS_LEN_PAGES_PARAMS = [
     FilmLenPagesCase(page_number=1, page_len=1, expected_status=HTTPStatus.OK),
     FilmLenPagesCase(page_number=10, page_len=10, expected_status=HTTPStatus.OK),
     FilmLenPagesCase(page_number=100, page_len=100, expected_status=HTTPStatus.OK),
-    FilmLenPagesCase(page_number=100000, page_len=1, expected_status=HTTPStatus.BAD_REQUEST),
+    FilmLenPagesCase(
+        page_number=100000, page_len=1, expected_status=HTTPStatus.BAD_REQUEST
+    ),
 ]
-FilmGenresCase = namedtuple("FilmGenresCase", ("genre_uuid", "expected_response_status"))
+FilmGenresCase = namedtuple(
+    "FilmGenresCase", ("genre_uuid", "expected_response_status")
+)
 
 FILMS_GENRES = [
     FilmGenresCase(
-        genre_uuid="b92ef010-5e4c-4fd0-99d6-41b6456272cd", expected_response_status=HTTPStatus.OK
+        genre_uuid="b92ef010-5e4c-4fd0-99d6-41b6456272cd",
+        expected_response_status=HTTPStatus.OK,
     ),
     FilmGenresCase(
-        genre_uuid="120a21cf-9097-479e-904a-13dd7198c1dd", expected_response_status=HTTPStatus.OK
+        genre_uuid="120a21cf-9097-479e-904a-13dd7198c1dd",
+        expected_response_status=HTTPStatus.OK,
     ),
-    FilmGenresCase(genre_uuid="wrong_uuid", expected_response_status=HTTPStatus.NOT_FOUND),
+    FilmGenresCase(
+        genre_uuid="wrong_uuid", expected_response_status=HTTPStatus.NOT_FOUND
+    ),
 ]
