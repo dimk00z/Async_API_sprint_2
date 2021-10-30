@@ -1,13 +1,12 @@
+from http import HTTPStatus
 from collections import namedtuple
 
 # /genre/{genre_uuid}
-GenreByUUIDCase = namedtuple(
-    "GenreByUUIDCase", ("genre_uuid", "expected_status", "expected_body")
-)
+GenreByUUIDCase = namedtuple("GenreByUUIDCase", ("genre_uuid", "expected_status", "expected_body"))
 GENRE_BY_UUID_DATA = [
     GenreByUUIDCase(
         genre_uuid="6c162475-c7ed-4461-9184-001ef3d9f26e",
-        expected_status=200,
+        expected_status=HTTPStatus.OK,
         expected_body={
             "uuid": "6c162475-c7ed-4461-9184-001ef3d9f26e",
             "name": "Sci-Fi",
@@ -15,12 +14,12 @@ GENRE_BY_UUID_DATA = [
     ),
     GenreByUUIDCase(
         genre_uuid="0c162471-c7ed-4461-9184-001af3d9f26e",
-        expected_status=404,
+        expected_status=HTTPStatus.NOT_FOUND,
         expected_body={"detail": "genre not found"},
     ),
     GenreByUUIDCase(  # validation error
         genre_uuid="not-uuid",
-        expected_status=422,
+        expected_status=HTTPStatus.UNPROCESSABLE_ENTITY,
         expected_body={
             "detail": [
                 {
@@ -37,7 +36,7 @@ GENRE_BY_UUID_DATA = [
 GenresCase = namedtuple("GenresCase", ("expected_status", "expected_body"))
 GENRE_DATA = [
     GenresCase(
-        expected_status=200,
+        expected_status=HTTPStatus.OK,
         expected_body=[
             {"uuid": "3d8d9bf5-0d90-4353-88ba-4ccc5d2c07ff", "name": "Action"},
             {"uuid": "120a21cf-9097-479e-904a-13dd7198c1dd", "name": "Adventure"},
