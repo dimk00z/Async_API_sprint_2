@@ -15,9 +15,9 @@ class PersonForFilm(BaseModel):
 class Film(AbstractModel):
     uuid: UUID
     title: str
-    description: Optional[str] = None
-    imdb_rating: Optional[float] = None
+    description: Optional[str]
+    imdb_rating: Optional[float]
     genres: list[Genre]
-    writers: list[PersonForFilm]
-    actors: list[PersonForFilm]
-    directors: list[PersonForFilm]
+    writers: Optional[list[PersonForFilm]]
+    actors: Optional[list[PersonForFilm]]
+    directors: Optional[list[PersonForFilm]]
