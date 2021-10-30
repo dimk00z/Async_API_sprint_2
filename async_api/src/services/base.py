@@ -31,7 +31,7 @@ class MainService:
             result_object = self.model(**doc_["_source"])
 
         except (RequestError, NotFoundError) as elastic_error:
-            logging.error(elastic_error)
+            logging.exception(elastic_error)
         finally:
             return result_object
 
@@ -48,5 +48,5 @@ class MainService:
             if response:
                 result_objects = response["hits"]["hits"]
         except (RequestError, NotFoundError) as elastic_error:
-            logging.error(elastic_error)
+            logging.exception(elastic_error)
         return result_objects
