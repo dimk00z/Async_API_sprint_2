@@ -1,3 +1,4 @@
+from http import HTTPStatus
 from collections import namedtuple
 
 # /person/{person_uuid}
@@ -7,7 +8,7 @@ PersonByUUIDCase = namedtuple(
 PERSON_BY_UUID_DATA = [
     PersonByUUIDCase(
         person_uuid="96f18d84-55e0-4718-b87f-4a9e63544d76",
-        expected_status=200,
+        expected_status=HTTPStatus.OK,
         expected_body={
             "uuid": "96f18d84-55e0-4718-b87f-4a9e63544d76",
             "full_name": "George Germanetti",
@@ -22,12 +23,12 @@ PERSON_BY_UUID_DATA = [
     ),
     PersonByUUIDCase(
         person_uuid="16f18d84-55e0-4718-b87f-4a9e63544d76",
-        expected_status=404,
+        expected_status=HTTPStatus.NOT_FOUND,
         expected_body={"detail": "Person not found"},
     ),
     PersonByUUIDCase(  # validation error
         person_uuid="not-uuid",
-        expected_status=422,
+        expected_status=HTTPStatus.UNPROCESSABLE_ENTITY,
         expected_body={
             "detail": [
                 {
@@ -47,7 +48,7 @@ PersonFilmsByUUIDCase = namedtuple(
 PERSON_FILMS_BY_UUID_DATA = [
     PersonFilmsByUUIDCase(
         person_uuid="96f18d84-55e0-4718-b87f-4a9e63544d76",
-        expected_status=200,
+        expected_status=HTTPStatus.OK,
         expected_body=[
             {
                 "uuid": "b164fef5-0867-46d8-b635-737e1721f6bf",
@@ -58,12 +59,12 @@ PERSON_FILMS_BY_UUID_DATA = [
     ),
     PersonFilmsByUUIDCase(
         person_uuid="16f18d84-55e0-4718-b87f-4a9e63544d76",
-        expected_status=404,
+        expected_status=HTTPStatus.NOT_FOUND,
         expected_body={"detail": "Person not found"},
     ),
     PersonFilmsByUUIDCase(  # validation error
         person_uuid="not-uuid",
-        expected_status=422,
+        expected_status=HTTPStatus.UNPROCESSABLE_ENTITY,
         expected_body={
             "detail": [
                 {
@@ -83,7 +84,7 @@ PersonSearchCase = namedtuple(
 PERSON_SEARCH_DATA = [
     PersonSearchCase(
         params={},
-        expected_status=422,
+        expected_status=HTTPStatus.UNPROCESSABLE_ENTITY,
         expected_body={
             "detail": [
                 {
@@ -96,12 +97,12 @@ PERSON_SEARCH_DATA = [
     ),
     PersonSearchCase(
         params={"query": "bad_query"},
-        expected_status=200,
+        expected_status=HTTPStatus.OK,
         expected_body=[],
     ),
     PersonSearchCase(
         params={"query": "george", "page[size]": 2, "page[number]": 5},
-        expected_status=200,
+        expected_status=HTTPStatus.OK,
         expected_body=[
             {
                 "uuid": "c2631edf-33c3-4729-adda-7a25b51f5f20",
