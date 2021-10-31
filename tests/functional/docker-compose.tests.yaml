@@ -6,6 +6,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    command: >
+      bash -c "./wait_for_it.sh movies-redis:6379 -- ./wait_for_it.sh movies-elastic:9200 --
+      python utils/connections.py && pytest ."
     depends_on:
       - movies-elastic
       - movies-redis

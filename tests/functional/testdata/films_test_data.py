@@ -1,3 +1,4 @@
+from http import HTTPStatus
 from collections import namedtuple
 
 FilmByUUIDCase = namedtuple(
@@ -7,7 +8,7 @@ FilmByUUIDCase = namedtuple(
 FILM_BY_UUID_DATA = [
     FilmByUUIDCase(
         film_uuid="2a090dde-f688-46fe-a9f4-b781a985275e",
-        expected_status=200,
+        expected_status=HTTPStatus.OK,
         expected_body={
             "uuid": "2a090dde-f688-46fe-a9f4-b781a985275e",
             "title": "Star Wars: Knights of the Old Republic",
@@ -80,7 +81,7 @@ FILM_BY_UUID_DATA = [
     ),
     FilmByUUIDCase(
         film_uuid="3f8873be-f6b1-4f3f-8a01-873924659851",
-        expected_status=200,
+        expected_status=HTTPStatus.OK,
         expected_body={
             "uuid": "3f8873be-f6b1-4f3f-8a01-873924659851",
             "title": "Justin Bieber: A Star Was Born",
@@ -102,12 +103,12 @@ FILM_BY_UUID_DATA = [
     ),
     FilmByUUIDCase(
         film_uuid="3f8873be-f6b1-4f3f-8000-873924659851",
-        expected_status=404,
+        expected_status=HTTPStatus.NOT_FOUND,
         expected_body={"detail": "film not found"},
     ),
     FilmByUUIDCase(
         film_uuid="wrong-uuid",
-        expected_status=422,
+        expected_status=HTTPStatus.UNPROCESSABLE_ENTITY,
         expected_body={
             "detail": [
                 {
@@ -127,12 +128,12 @@ FilmSearchCase = namedtuple(
 FILM_SEARCH_DATA = [
     FilmSearchCase(
         params={"query": "bad_query"},
-        expected_status=404,
+        expected_status=HTTPStatus.NOT_FOUND,
         expected_body={"detail": "not one film found"},
     ),
     FilmSearchCase(
         params={"query": "Bieber"},
-        expected_status=200,
+        expected_status=HTTPStatus.OK,
         expected_body=[
             {
                 "uuid": "3f8873be-f6b1-4f3f-8a01-873924659851",
@@ -142,33 +143,18 @@ FILM_SEARCH_DATA = [
         ],
     ),
     FilmSearchCase(
-        params={"query": "Birth"},
-        expected_status=200,
+        params={"query": "Demon"},
+        expected_status=HTTPStatus.OK,
         expected_body=[
             {
-                "uuid": "26d9ff12-5110-4ab4-bb04-a4ca55729503",
-                "title": "Star Trek: Birth of the Federation",
-                "imdb_rating": 8.4,
+                "uuid": "fc23ea9c-e799-419a-9df0-fc9d9b941a12",
+                "title": "Star Troopers",
+                "imdb_rating": 4.7,
             },
             {
-                "uuid": "4af6c9c9-0be0-4864-b1e9-7f87dd59ee1f",
-                "title": "Star Trek",
-                "imdb_rating": 7.9,
-            },
-            {
-                "uuid": "7a25c172-c846-48b6-8cb4-e9003b786937",
-                "title": "Prelude: Dog Star Man",
-                "imdb_rating": 6.9,
-            },
-            {
-                "uuid": "231583e8-50bd-4e4d-8514-325b4bb8a61e",
-                "title": "Prelude: Dog Star Man",
-                "imdb_rating": 6.7,
-            },
-            {
-                "uuid": "a6187fa4-56e9-4fb4-8fba-ca9b27ace656",
-                "title": "Star Trek Secret Voyage: Whose Birth These Triumphs Are",
-                "imdb_rating": 5.9,
+                "uuid": "935e418d-09f3-4de4-8ce3-c31f31580b12",
+                "title": "Bucky Larson: Born to Be a Star",
+                "imdb_rating": 3.2,
             },
             {
                 "uuid": "9a233936-915e-4e8a-99bb-5d94a1d9eeca",
@@ -179,32 +165,127 @@ FILM_SEARCH_DATA = [
     ),
 ]
 
-FilmRatingSortCase = namedtuple("FilmRatingSortCase", ("sorting",))
-
-FILMS_SORTING_PARAMS = (
-    FilmRatingSortCase(sorting="imdb_rating"),
-    FilmRatingSortCase(sorting="-imdb_rating"),
-    FilmRatingSortCase(sorting="wrong_sort"),
+FilmRatingSortCase = namedtuple(
+    "FilmRatingSortCase", ("sorting", "expected_status", "expected_body")
 )
 
-FilmPageCase = namedtuple("FilmPageCase", ("page_number", "expected_status"))
+FILMS_SORTING_PARAMS = (
+    FilmRatingSortCase(
+        sorting="imdb_rating",
+        expected_status=HTTPStatus.OK,
+        expected_body=[
+            {
+                "uuid": "3f8873be-f6b1-4f3f-8a01-873924659851",
+                "title": "Justin Bieber: A Star Was Born",
+                "imdb_rating": 1,
+            },
+            {
+                "uuid": "b9151ead-cf2f-4e14-aeb9-c4617f68848f",
+                "title": "Star Quest: The Odyssey",
+                "imdb_rating": 1.5,
+            },
+        ],
+    ),
+    FilmRatingSortCase(
+        sorting="-imdb_rating",
+        expected_status=HTTPStatus.OK,
+        expected_body=[
+            {
+                "uuid": "2a090dde-f688-46fe-a9f4-b781a985275e",
+                "title": "Star Wars: Knights of the Old Republic",
+                "imdb_rating": 9.6,
+            },
+            {
+                "uuid": "c241874f-53d3-411a-8894-37c19d8bf010",
+                "title": "Star Wars SC 38 Reimagined",
+                "imdb_rating": 9.5,
+            },
+        ],
+    ),
+    FilmRatingSortCase(
+        sorting="wrong_field",
+        expected_status=HTTPStatus.BAD_REQUEST,
+        expected_body={
+            "detail": "No mapping found for [wrong_field] in order to sort on"
+        },
+    ),
+)
+
+FilmPageCase = namedtuple(
+    "FilmPageCase", ("page_number", "expected_status", "expected_body")
+)
 
 FILMS_PAGES_PARAMS = (
-    FilmPageCase(page_number=1, expected_status=200),
-    FilmPageCase(page_number=2, expected_status=200),
-    FilmPageCase(page_number=10, expected_status=200),
-    FilmPageCase(page_number=-10, expected_status=200),
-    FilmPageCase(page_number=1000, expected_status=404),
+    FilmPageCase(
+        page_number=1,
+        expected_status=HTTPStatus.OK,
+        expected_body=[
+            {
+                "uuid": "05d7341e-e367-4e2e-acf5-4652a8435f93",
+                "title": "The Secret World of Jeffree Star",
+                "imdb_rating": 9.5,
+            },
+            {
+                "uuid": "c49c1df9-6d06-47b7-87db-d96190901fa4",
+                "title": "Ringo Rocket Star and His Song for Yuri Gagarin",
+                "imdb_rating": 9.4,
+            },
+        ],
+    ),
+    FilmPageCase(
+        page_number=2,
+        expected_status=HTTPStatus.OK,
+        expected_body=[
+            {
+                "uuid": "c71db79a-6978-46da-9b89-43a92ebfceac",
+                "title": "Kirby Super Star",
+                "imdb_rating": 9.2,
+            },
+            {
+                "uuid": "2e5561a2-bb7f-48d3-8249-fb668db6014a",
+                "title": "Lunar: The Silver Star",
+                "imdb_rating": 9.2,
+            },
+        ],
+    ),
+    FilmPageCase(
+        page_number=10,
+        expected_status=HTTPStatus.OK,
+        expected_body=[
+            {
+                "uuid": "0312ed51-8833-413f-bff5-0e139c11264a",
+                "title": "Star Wars: Episode V - The Empire Strikes Back",
+                "imdb_rating": 8.7,
+            },
+            {
+                "uuid": "3aba7aa0-8930-417c-bf78-3df596c3f062",
+                "title": "Star Wars: The Old Republic",
+                "imdb_rating": 8.7,
+            },
+        ],
+    ),
+    FilmPageCase(
+        page_number=-10,
+        expected_status=HTTPStatus.BAD_REQUEST,
+        expected_body={"detail": "[from] parameter cannot be negative"},
+    ),
+    FilmPageCase(
+        page_number=1000,
+        expected_status=HTTPStatus.NOT_FOUND,
+        expected_body={"detail": "not one film found"},
+    ),
 )
 FilmLenPagesCase = namedtuple(
     "FilmLenPagesCase", ("page_number", "page_len", "expected_status")
 )
 
 FILMS_LEN_PAGES_PARAMS = [
-    FilmLenPagesCase(page_number=1, page_len=1, expected_status=200),
-    FilmLenPagesCase(page_number=10, page_len=10, expected_status=200),
-    FilmLenPagesCase(page_number=100, page_len=100, expected_status=200),
-    FilmLenPagesCase(page_number=100000, page_len=1, expected_status=404),
+    FilmLenPagesCase(page_number=1, page_len=1, expected_status=HTTPStatus.OK),
+    FilmLenPagesCase(page_number=10, page_len=10, expected_status=HTTPStatus.OK),
+    FilmLenPagesCase(page_number=100, page_len=100, expected_status=HTTPStatus.OK),
+    FilmLenPagesCase(
+        page_number=100000, page_len=1, expected_status=HTTPStatus.BAD_REQUEST
+    ),
 ]
 FilmGenresCase = namedtuple(
     "FilmGenresCase", ("genre_uuid", "expected_response_status")
@@ -212,10 +293,14 @@ FilmGenresCase = namedtuple(
 
 FILMS_GENRES = [
     FilmGenresCase(
-        genre_uuid="b92ef010-5e4c-4fd0-99d6-41b6456272cd", expected_response_status=200
+        genre_uuid="b92ef010-5e4c-4fd0-99d6-41b6456272cd",
+        expected_response_status=HTTPStatus.OK,
     ),
     FilmGenresCase(
-        genre_uuid="120a21cf-9097-479e-904a-13dd7198c1dd", expected_response_status=200
+        genre_uuid="120a21cf-9097-479e-904a-13dd7198c1dd",
+        expected_response_status=HTTPStatus.OK,
     ),
-    FilmGenresCase(genre_uuid="wrong_uuid", expected_response_status=404),
+    FilmGenresCase(
+        genre_uuid="wrong_uuid", expected_response_status=HTTPStatus.NOT_FOUND
+    ),
 ]

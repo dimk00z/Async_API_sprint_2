@@ -69,12 +69,12 @@ def event_loop(request):
 
 @pytest.fixture
 def get_request(session, settings):
-    async def inner(method: str, params: dict = None) -> HTTPResponse:
+    async def inner(path: str, params: dict = None) -> HTTPResponse:
         params = params or {}
         async_api_host = settings.async_api_host
         # export ASYNC_API_HOST="http://178.154.213.182:8000/api/v1" - для проверки на живом
         # python -m pytest -vv
-        url = f"{async_api_host}{method}"
+        url = f"{async_api_host}{path}"
         async with session.get(url, params=params) as response:
             return HTTPResponse(
                 body=await response.json(),

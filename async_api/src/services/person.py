@@ -5,9 +5,9 @@ from functools import lru_cache
 
 from fastapi import Depends
 from db.elastic import get_elastic
-from services.base import MainService
 from services.film import FilmService
 from elasticsearch import AsyncElasticsearch
+from services.base import MainService, EndPointParam
 from models.person import Person, PersonFilm, PersonRole
 
 PERSON_REDIS_CACHE_EXPIRE_IN_SECONDS = 60 * 5  # 5 минут
@@ -19,16 +19,23 @@ class PersonService(MainService):
     model = Person
     index = "persons"
 
-    async def get_by_full_name(
-        self, query_full_name: str, page_number: int = 0, page_size: int = 25
-    ) -> list[Person]:
-        persons = await self._search(
-            query={
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.valid_params["query_full_name"] = EndPointParam(
+            parse_func=self._parse_query_full_name, required_params=("query_full_name",)
+        )
+
+    def _parse_query_full_name(self, query_full_name: str) -> dict[str, str]:
+        return "body", {
+            "query": {
                 "match": {"full_name": {"query": query_full_name, "fuzziness": "auto"}}
             },
+        }
+
+    async def get_by_full_name(self, **end_point_params) -> list[Person]:
+        persons = await self._search(
             filter_path=["hits.hits._source"],
-            from_=page_number * page_size,
-            size=page_size,
+            **self._parse_params(**end_point_params),
         )
         return [self.model(**doc["_source"]) for doc in persons]
 

@@ -30,7 +30,7 @@ async def get_genres(
 @router.get("/", summary="Список жанров")
 async def genres_list(
     genres_service: GenreService = Depends(get_genre_service),
-    page_number: int = Query(1, alias="page[number]"),
+    page_number: int = Query(0, alias="page[number]"),
     page_size: int = Query(50, alias="page[size]"),
 ) -> list[Genre]:
     """

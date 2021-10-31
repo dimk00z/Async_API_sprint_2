@@ -1,6 +1,7 @@
 from uuid import UUID
 
 from pydantic import BaseModel
+from pydantic.schema import Optional
 
 from .genre import Genre
 from .abstract_model import AbstractModel
@@ -14,9 +15,9 @@ class PersonForFilm(BaseModel):
 class Film(AbstractModel):
     uuid: UUID
     title: str
-    description: str = None
-    imdb_rating: float = None
-    genres: list[Genre] = None
-    writers: list[PersonForFilm] = None
-    actors: list[PersonForFilm] = None
-    directors: list[PersonForFilm] = None
+    description: Optional[str]
+    imdb_rating: Optional[float]
+    genres: list[Genre]
+    writers: Optional[list[PersonForFilm]]
+    actors: Optional[list[PersonForFilm]]
+    directors: Optional[list[PersonForFilm]]

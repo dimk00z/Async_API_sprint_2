@@ -5,11 +5,12 @@ from testdata.person_test_data import (
     PERSON_FILMS_BY_UUID_DATA,
 )
 
+pytestmark = pytest.mark.asyncio
+
 
 @pytest.mark.parametrize(
     "person_uuid,expected_status,expected_body", PERSON_BY_UUID_DATA
 )
-@pytest.mark.asyncio
 async def test_person_by_uuid(
     get_request, test_case_helper, person_uuid, expected_status, expected_body
 ):
@@ -23,7 +24,6 @@ async def test_person_by_uuid(
 @pytest.mark.parametrize(
     "person_uuid,expected_status,expected_body", PERSON_FILMS_BY_UUID_DATA
 )
-@pytest.mark.asyncio
 async def test_person_films_by_uuid(
     get_request, test_case_helper, person_uuid, expected_status, expected_body
 ):
@@ -35,7 +35,6 @@ async def test_person_films_by_uuid(
 
 
 @pytest.mark.parametrize("params,expected_status,expected_body", PERSON_SEARCH_DATA)
-@pytest.mark.asyncio
 async def test_person_search(
     get_request, test_case_helper, params, expected_status, expected_body
 ):
