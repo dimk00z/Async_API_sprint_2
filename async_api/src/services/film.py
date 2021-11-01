@@ -9,8 +9,6 @@ from services.base import MainService, EndPointParam
 
 FILM_CACHE_EXPIRE_IN_SECONDS = 60 * 5  # 5 минут
 
-EndPointParam = namedtuple("EndPointParam", ("parse_func", "required_params"))
-
 
 class FilmService(MainService):
     index = "movies"
@@ -27,9 +25,7 @@ class FilmService(MainService):
             "query": {
                 "nested": {
                     "path": "genres",
-                    "query": {
-                        "bool": {"must": [{"match": {f"genres.uuid": filter_genre}}]}
-                    },
+                    "query": {"bool": {"must": [{"match": {f"genres.uuid": filter_genre}}]}},
                 }
             },
         }
