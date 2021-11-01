@@ -27,9 +27,7 @@ class MainService:
         # определены общие доступные параметры для ручек
         # для каждого параметра свой парсер для запроса в эластик
         self.valid_params = {
-            "sort": EndPointParam(
-                parse_func=self._parse_sort, required_params=("sort",)
-            ),
+            "sort": EndPointParam(parse_func=self._parse_sort, required_params=("sort",)),
             "page_number": EndPointParam(
                 parse_func=self._parse_page_number,
                 required_params=("page_number", "page_size"),
@@ -37,17 +35,12 @@ class MainService:
             "page_size": EndPointParam(
                 parse_func=self._parse_page_size, required_params=("page_size",)
             ),
-            "query": EndPointParam(
-                parse_func=self._parse_query, required_params=("query")
-            ),
+            "query": EndPointParam(parse_func=self._parse_query, required_params=("query")),
         }
 
     def _parse_sort(self, sort: str) -> dict[str, str]:
-        sort_direction = "asc"
-        sort_field = sort
-        if sort[0] == "-":
-            sort_direction = "desc"
-            sort_field = sort_field[1:]
+        sort_direction = "desc" if sort.startswith("-") else "asc"
+        sort_field = sort.removeprefix("-")
         return "sort", f"{sort_field}:{sort_direction}"
 
     def _parse_query(self, query: str) -> dict[str, str]:
