@@ -1,14 +1,14 @@
 import logging
-from uuid import UUID
-from http import HTTPStatus
 from collections import namedtuple
+from http import HTTPStatus
+from uuid import UUID
 
 from aiocache import cached
-from pydantic import BaseModel
-from fastapi import HTTPException
 from db.redis import get_redis_cache_config
 from elasticsearch import AsyncElasticsearch
-from elasticsearch.exceptions import RequestError, NotFoundError
+from elasticsearch.exceptions import NotFoundError, RequestError
+from fastapi import HTTPException
+from pydantic import BaseModel
 
 CACHE_EXPIRE_IN_SECONDS = 60 * 5  # 5 минут
 EndPointParam = namedtuple("EndPointParam", ("parse_func", "required_params"))
@@ -43,11 +43,8 @@ class MainService:
         }
 
     def _parse_sort(self, sort: str) -> dict[str, str]:
-        sort_direction = "asc"
-        sort_field = sort
-        if sort[0] == "-":
-            sort_direction = "desc"
-            sort_field = sort_field[1:]
+        sort_direction = "desc" if sort.startswith("-") else "asc"
+        sort_field = sort.removeprefix("-")
         return "sort", f"{sort_field}:{sort_direction}"
 
     def _parse_query(self, query: str) -> dict[str, str]:
@@ -97,8 +94,10 @@ class MainService:
             doc_ = await self.elastic.get(index=self.index, id=str(uuid))
             result_object = self.model(**doc_["_source"])
 
-        except (RequestError, NotFoundError) as elastic_error:
-            logging.exception(elastic_error)
+        except (RequestError, NotFoundError):
+            logging.exception(
+                "Elasticsearch error has been raised while getting by UUID"
+            )
         finally:
             return result_object
 

@@ -1,6 +1,6 @@
 from functools import lru_cache
 
-from pydantic import Field, BaseSettings
+from pydantic import BaseSettings, Field
 
 CONNECTIONS_MAX_TIME = 60
 

@@ -1,10 +1,10 @@
-from uuid import UUID
 from http import HTTPStatus
 from typing import Optional
+from uuid import UUID
 
+from fastapi import APIRouter, Depends, HTTPException, Query
 from models.film import Film
 from services.film import FilmService, get_film_service
-from fastapi import Query, Depends, APIRouter, HTTPException
 
 router = APIRouter()
 
@@ -41,7 +41,7 @@ async def films_list(
     sort: Optional[str] = Query(
         default="-imdb_rating", regex="^-?[a-zA-Z_]+$", alias="sort"
     ),
-    page_number: int = Query(default=0, alias="page[number]"),
+    page_number: int = Query(default=1, alias="page[number]"),
     page_size: int = Query(default=50, alias="page[size]"),
 ) -> list[dict]:
     """
@@ -57,7 +57,7 @@ async def films_list(
         sort=sort,
         filter_genre=filter_genre,
         page_size=page_size,
-        page_number=page_number,
+        page_number=page_number - 1,
     )
 
 
@@ -68,7 +68,7 @@ async def films_list(
 async def films_search(
     film_service: FilmService = Depends(get_film_service),
     sort: Optional[str] = Query(None, regex="^-?[a-zA-Z_]+$", alias="sort"),
-    page_number: int = Query(0, alias="page[number]"),
+    page_number: int = Query(1, alias="page[number]"),
     page_size: int = Query(50, alias="page[size]"),
     query: Optional[str] = Query(
         None,
@@ -86,7 +86,7 @@ async def films_search(
         film_service=film_service,
         sort=sort,
         query=query,
-        page_number=page_number,
+        page_number=page_number - 1,
         page_size=page_size,
     )
 

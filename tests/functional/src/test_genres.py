@@ -1,5 +1,5 @@
 import pytest
-from testdata.genre_test_data import GENRE_DATA, GENRE_BY_UUID_DATA
+from testdata.genre_test_data import GENRE_BY_UUID_DATA, GENRE_DATA
 
 pytestmark = pytest.mark.asyncio
 
