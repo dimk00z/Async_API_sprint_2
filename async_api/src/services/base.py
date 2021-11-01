@@ -94,8 +94,10 @@ class MainService:
             doc_ = await self.elastic.get(index=self.index, id=str(uuid))
             result_object = self.model(**doc_["_source"])
 
-        except (RequestError, NotFoundError) as elastic_error:
-            logging.exception(elastic_error)
+        except (RequestError, NotFoundError):
+            logging.exception(
+                "Elasticsearch error has been raised while getting by UUID"
+            )
         finally:
             return result_object
 
