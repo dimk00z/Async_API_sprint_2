@@ -105,23 +105,23 @@ PERSON_SEARCH_DATA = [
         expected_status=HTTPStatus.OK,
         expected_body=[
             {
-                "uuid": "c2631edf-33c3-4729-adda-7a25b51f5f20",
-                "full_name": "George Geertsen",
+                "uuid": "a57c7839-6af9-4f97-8899-ab29f193988e",
+                "full_name": "George Nichols",
                 "films": [
                     {
-                        "uuid": "a59f548f-e660-4994-ae5e-ed3c911225d3",
-                        "title": "George and the Christmas Star",
-                        "role": "actor",
+                        "uuid": "24eafcd7-1018-4951-9e17-583e2554ef0a",
+                        "title": "The Star Boarder",
+                        "role": "director",
                     }
                 ],
             },
             {
-                "uuid": "89aa1224-d1fd-417c-8561-6993212ecb48",
-                "full_name": "George Lazenby",
+                "uuid": "14946aea-53fe-4d06-986d-c888227a0ae9",
+                "full_name": "George Stroumboulopoulos",
                 "films": [
                     {
-                        "uuid": "38f21901-7dcb-467f-b512-550955c072d2",
-                        "title": "Star of Jaipur",
+                        "uuid": "2f0b8fa3-8930-4046-bdcf-2f257899a2b9",
+                        "title": "The One: Making a Music Star",
                         "role": "actor",
                     }
                 ],

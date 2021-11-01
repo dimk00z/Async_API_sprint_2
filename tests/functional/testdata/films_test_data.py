@@ -221,6 +221,22 @@ FILMS_PAGES_PARAMS = (
         expected_status=HTTPStatus.OK,
         expected_body=[
             {
+                "uuid": "2a090dde-f688-46fe-a9f4-b781a985275e",
+                "title": "Star Wars: Knights of the Old Republic",
+                "imdb_rating": 9.6,
+            },
+            {
+                "uuid": "c241874f-53d3-411a-8894-37c19d8bf010",
+                "title": "Star Wars SC 38 Reimagined",
+                "imdb_rating": 9.5,
+            },
+        ],
+    ),
+    FilmPageCase(
+        page_number=2,
+        expected_status=HTTPStatus.OK,
+        expected_body=[
+            {
                 "uuid": "05d7341e-e367-4e2e-acf5-4652a8435f93",
                 "title": "The Secret World of Jeffree Star",
                 "imdb_rating": 9.5,
@@ -233,34 +249,18 @@ FILMS_PAGES_PARAMS = (
         ],
     ),
     FilmPageCase(
-        page_number=2,
-        expected_status=HTTPStatus.OK,
-        expected_body=[
-            {
-                "uuid": "c71db79a-6978-46da-9b89-43a92ebfceac",
-                "title": "Kirby Super Star",
-                "imdb_rating": 9.2,
-            },
-            {
-                "uuid": "2e5561a2-bb7f-48d3-8249-fb668db6014a",
-                "title": "Lunar: The Silver Star",
-                "imdb_rating": 9.2,
-            },
-        ],
-    ),
-    FilmPageCase(
         page_number=10,
         expected_status=HTTPStatus.OK,
         expected_body=[
             {
-                "uuid": "0312ed51-8833-413f-bff5-0e139c11264a",
-                "title": "Star Wars: Episode V - The Empire Strikes Back",
-                "imdb_rating": 8.7,
+                "uuid": "b16d59f7-a386-467b-bea3-35e7ffbba902",
+                "title": "Star Tech",
+                "imdb_rating": 8.8,
             },
             {
-                "uuid": "3aba7aa0-8930-417c-bf78-3df596c3f062",
-                "title": "Star Wars: The Old Republic",
-                "imdb_rating": 8.7,
+                "uuid": "53d660a1-be2b-4b53-9761-0a315a693789",
+                "title": "Kinect Star Wars: Duel",
+                "imdb_rating": 8.8,
             },
         ],
     ),

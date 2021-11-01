@@ -25,7 +25,7 @@ class Person(BaseModel):
 @router.get("/search", response_model=list[Person], summary="Поиск по персонам")
 async def person_search(
     query: str,
-    page_number: int = Query(0, alias="page[number]"),
+    page_number: int = Query(1, alias="page[number]"),
     page_size: int = Query(25, alias="page[size]"),
     person_service: PersonService = Depends(get_person_service),
 ) -> list[Person]:
@@ -39,7 +39,7 @@ async def person_search(
     """
 
     persons = await person_service.get_by_full_name(
-        query_full_name=query, page_number=page_number, page_size=page_size
+        query_full_name=query, page_number=page_number - 1, page_size=page_size
     )
 
     films_of_persons = await asyncio.gather(
