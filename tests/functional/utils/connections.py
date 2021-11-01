@@ -1,8 +1,8 @@
 import asyncio
 import logging
 
-import backoff
 import aioredis
+import backoff
 from elasticsearch import AsyncElasticsearch
 from settings import CONNECTIONS_MAX_TIME, Settings
 

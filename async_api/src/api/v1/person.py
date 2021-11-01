@@ -1,10 +1,10 @@
 import asyncio
-from uuid import UUID
 from http import HTTPStatus
+from uuid import UUID
 
-from pydantic import BaseModel
+from fastapi import APIRouter, Depends, HTTPException, Query
 from models.person import PersonRole
-from fastapi import Query, Depends, APIRouter, HTTPException
+from pydantic import BaseModel
 from services.person import PersonService, get_person_service
 
 router = APIRouter()

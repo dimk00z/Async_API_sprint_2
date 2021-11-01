@@ -1,13 +1,13 @@
 import asyncio
-from unittest import TestCase
 from dataclasses import dataclass
+from unittest import TestCase
 
-import pytest
 import aiohttp
-from settings import get_settings
+import pytest
 from multidict import CIMultiDictProxy
-from utils.setup import redis_setup, elastic_setup
-from utils.connections import redis_connect, elastic_connect
+from settings import get_settings
+from utils.connections import elastic_connect, redis_connect
+from utils.setup import elastic_setup, redis_setup
 
 
 @dataclass

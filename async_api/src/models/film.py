@@ -3,8 +3,8 @@ from uuid import UUID
 from pydantic import BaseModel
 from pydantic.schema import Optional
 
-from .genre import Genre
 from .abstract_model import AbstractModel
+from .genre import Genre
 
 
 class PersonForFilm(BaseModel):

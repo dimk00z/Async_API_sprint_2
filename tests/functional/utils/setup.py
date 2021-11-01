@@ -1,9 +1,9 @@
 import json
 
 from aioredis import Redis
-from elasticsearch._async import helpers
 from elasticsearch import AsyncElasticsearch
-from settings import ES_SCHEMA_FILE, ES_INDEXES_FILES
+from elasticsearch._async import helpers
+from settings import ES_INDEXES_FILES, ES_SCHEMA_FILE
 
 
 async def elastic_setup(es_client: AsyncElasticsearch) -> None:

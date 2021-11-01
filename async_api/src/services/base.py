@@ -1,14 +1,14 @@
 import logging
-from uuid import UUID
-from http import HTTPStatus
 from collections import namedtuple
+from http import HTTPStatus
+from uuid import UUID
 
 from aiocache import cached
-from pydantic import BaseModel
-from fastapi import HTTPException
 from db.redis import get_redis_cache_config
 from elasticsearch import AsyncElasticsearch
-from elasticsearch.exceptions import RequestError, NotFoundError
+from elasticsearch.exceptions import NotFoundError, RequestError
+from fastapi import HTTPException
+from pydantic import BaseModel
 
 CACHE_EXPIRE_IN_SECONDS = 60 * 5  # 5 минут
 EndPointParam = namedtuple("EndPointParam", ("parse_func", "required_params"))

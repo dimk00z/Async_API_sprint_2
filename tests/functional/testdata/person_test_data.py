@@ -1,5 +1,5 @@
-from http import HTTPStatus
 from collections import namedtuple
+from http import HTTPStatus
 
 # /person/{person_uuid}
 PersonByUUIDCase = namedtuple(

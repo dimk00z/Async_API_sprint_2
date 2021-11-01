@@ -1,11 +1,11 @@
-from functools import lru_cache
 from collections import namedtuple
+from functools import lru_cache
 
-from fastapi import Depends
-from models.film import Film
 from db.elastic import get_elastic
 from elasticsearch import AsyncElasticsearch
-from services.base import MainService, EndPointParam
+from fastapi import Depends
+from models.film import Film
+from services.base import EndPointParam, MainService
 
 FILM_CACHE_EXPIRE_IN_SECONDS = 60 * 5  # 5 минут
 

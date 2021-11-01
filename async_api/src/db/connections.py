@@ -1,9 +1,9 @@
 import logging
 
-import backoff
 import aioredis
+import backoff
 from core import config
-from db import redis, elastic
+from db import elastic, redis
 from elasticsearch import AsyncElasticsearch
 
 

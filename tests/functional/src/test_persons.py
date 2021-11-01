@@ -1,8 +1,8 @@
 import pytest
 from testdata.person_test_data import (
-    PERSON_SEARCH_DATA,
     PERSON_BY_UUID_DATA,
     PERSON_FILMS_BY_UUID_DATA,
+    PERSON_SEARCH_DATA,
 )
 
 pytestmark = pytest.mark.asyncio

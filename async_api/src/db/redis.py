@@ -1,10 +1,10 @@
-from typing import Optional
 from functools import lru_cache
+from typing import Optional
 
-from core import config
-from aioredis import Redis
 from aiocache import RedisCache
 from aiocache.serializers import PickleSerializer
+from aioredis import Redis
+from core import config
 
 redis: Optional[Redis] = None
 

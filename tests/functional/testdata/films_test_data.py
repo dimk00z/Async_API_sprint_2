@@ -1,5 +1,5 @@
-from http import HTTPStatus
 from collections import namedtuple
+from http import HTTPStatus
 
 FilmByUUIDCase = namedtuple(
     "FilmByUUIDCase", ("film_uuid", "expected_status", "expected_body")

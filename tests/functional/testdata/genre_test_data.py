@@ -1,5 +1,5 @@
-from http import HTTPStatus
 from collections import namedtuple
+from http import HTTPStatus
 
 # /genre/{genre_uuid}
 GenreByUUIDCase = namedtuple(
