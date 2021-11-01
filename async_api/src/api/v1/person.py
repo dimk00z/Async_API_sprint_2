@@ -3,8 +3,9 @@ from http import HTTPStatus
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query
-from models.person import PersonRole
 from pydantic import BaseModel
+
+from models.person import PersonRole
 from services.person import PersonService, get_person_service
 
 router = APIRouter()

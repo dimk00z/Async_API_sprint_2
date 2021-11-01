@@ -3,6 +3,7 @@ from typing import Optional
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query
+
 from models.genre import Genre
 from services.genre import GenreService, get_genre_service
 

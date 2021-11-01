@@ -3,9 +3,10 @@ import logging
 from functools import lru_cache
 from uuid import UUID
 
-from db.elastic import get_elastic
 from elasticsearch import AsyncElasticsearch
 from fastapi import Depends
+
+from db.elastic import get_elastic
 from models.person import Person, PersonFilm, PersonRole
 from services.base import EndPointParam, MainService
 from services.film import FilmService

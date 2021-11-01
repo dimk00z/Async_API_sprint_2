@@ -1,9 +1,10 @@
 from collections import namedtuple
 from functools import lru_cache
 
-from db.elastic import get_elastic
 from elasticsearch import AsyncElasticsearch
 from fastapi import Depends
+
+from db.elastic import get_elastic
 from models.film import Film
 from services.base import EndPointParam, MainService
 

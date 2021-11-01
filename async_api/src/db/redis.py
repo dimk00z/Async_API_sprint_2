@@ -4,6 +4,7 @@ from typing import Optional
 from aiocache import RedisCache
 from aiocache.serializers import PickleSerializer
 from aioredis import Redis
+
 from core import config
 
 redis: Optional[Redis] = None

@@ -2,9 +2,10 @@ import logging
 
 import aioredis
 import backoff
+from elasticsearch import AsyncElasticsearch
+
 from core import config
 from db import elastic, redis
-from elasticsearch import AsyncElasticsearch
 
 
 def backoff_hdlr(details):
