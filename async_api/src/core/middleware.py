@@ -19,9 +19,7 @@ def apply_middleware(app: FastAPI):
             if oauth2_service == ""
             else f"{AUTH_HOST}/api/v1/auth/{oauth2_service}"
         )
-        auth_answer = await get_auth_answer(auth_url, headers)
-        if not auth_answer:
-            request.headers["is_authenticated"] = False
+        request.state.is_authenticated = True if await get_auth_answer(auth_url, headers) else False
         response = await call_next(request)
         return response
 
