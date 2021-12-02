@@ -18,3 +18,6 @@ ELASTIC_HOST = os.getenv("ES_HOST", "http://localhost:9200/")
 
 # Корень проекта
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Сервис аутентификации
+AUTH_HOST = os.getenv("AUTH_HOST", "http://localhost:8001/")

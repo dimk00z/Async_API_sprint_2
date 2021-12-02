@@ -6,6 +6,7 @@ from fastapi.responses import ORJSONResponse
 
 from api.v1 import film, genre, person
 from core.logger import LOGGING
+from core.middleware import apply_middleware
 from db import connections
 
 app = FastAPI(
@@ -33,7 +34,7 @@ async def shutdown():
 app.include_router(film.router, prefix="/api/v1/film", tags=["Фильмы"])
 app.include_router(person.router, prefix="/api/v1/person", tags=["Персоны"])
 app.include_router(genre.router, prefix="/api/v1/genre", tags=["Жанры"])
-
+apply_middleware(app=app)
 if __name__ == "__main__":
     uvicorn.run(
         "main:app",
