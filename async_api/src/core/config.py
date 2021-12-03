@@ -21,3 +21,5 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Сервис аутентификации
 AUTH_HOST = os.getenv("AUTH_HOST", "http://localhost:8001/")
+JWT_PUBLIC_KEY = os.getenv("JWT_PUBLIC_KEY", "JWT_PUBLIC_KEY")
+JWT_ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
