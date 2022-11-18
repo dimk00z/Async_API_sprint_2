@@ -36,10 +36,6 @@
       up -d --build
    ```
 
-### Пример тестирования
-
-![test_example](http://i.piccy.info/i9/09154947f06a481fef6e37c57507ef73/1635492899/150894/1446409/test_example.jpg)
-
 ## Выполнили
 
 - [Дмитрий Кузнецов](https://github.com/dimk00z)
